@@ -13,17 +13,21 @@ namespace Ceasar_encryption
             //Dictionary<char, char> D = new Dictionary<char, char>();
             //Enumerable.Range(65, 59).ToList().ForEach(x => Console.Write(" ({1}-{0})", shiftChar(-6, (char)x, D), (char)x));
             //Console.Write(" {0}-{1}", shiftChar(2, 'z'), 'a'- 'z');
-            string u = "A should have known that you would have a perfect answer for me!!!";
+            //string u = "I should Have known that you would have a perfect answer for me!!!";
             //string u = "O CAPTAIN! my Captain! our fearful trip is done;";
+            //string u = "aAgGzZ";
 
-            int shift = -1;
-            List<string> s = encodeStr(u, shift);
+            //int shift = 27;//(1+26*1) * -1;
+            //List<string> s = encodeStr(u, shift);
 
-            foreach (string st in s)
-                Console.Write("," + st);
+            //foreach (string st in s)
+            //    Console.Write("," + st);
 
-            Console.WriteLine("\n solution");
-            Console.WriteLine(decode(s));
+            //Console.WriteLine("\n solution");
+            //Console.WriteLine(decode(s));
+
+            Console.WriteLine("{0}-{1}, ", split(17, 5), 17);
+            Enumerable.Range(5,100).ToList().ForEach(x => Console.WriteLine("{0}-{1}, ",split(x, 5), x));
 
             Console.Read();
         }
@@ -62,10 +66,9 @@ namespace Ceasar_encryption
         {
             Dictionary<char, char> D = new Dictionary<char, char>();
 
-            //get shift
             string st = string.Concat(s);
 
-            int shift = calculateShiftInverse(st[0], st[1]);
+            int shift = calculateShift(st[0], st[1]);
 
             StringBuilder sb = new StringBuilder();
 
@@ -77,7 +80,7 @@ namespace Ceasar_encryption
             return sb.ToString();
         }
 
-        static int calculateShiftInverse(char c1, char c2)
+        static int calculateShift(char c1, char c2)
         {
             int alphabet = 26;
 
@@ -87,7 +90,7 @@ namespace Ceasar_encryption
 
             if (char.IsUpper(c2))
             {
-                res += (alphabet*2);
+                res += alphabet;
             }
 
             return res;
@@ -103,10 +106,18 @@ namespace Ceasar_encryption
                 res = size / (parts - 1);
                 
                 int maxMod = -1;
-
+                
                 while(true)
                 {
+                    if (res == 0)
+                        return res + 1;
+
                     mod = size % res;
+
+                    if (size / res > parts - 1)
+                    {
+                        return res + 1;
+                    }
 
                     if(mod <= maxMod)
                     {
@@ -114,7 +125,6 @@ namespace Ceasar_encryption
                     }
                     maxMod = mod;
                     res--;
-
                 }
             }
             return res;
@@ -129,10 +139,14 @@ namespace Ceasar_encryption
                 return D[c];
 
             int alphabet = 26;
+            int mod = 0;
+            int times = 0;
 
             if (shift < 0)
             {
-                shift = shift % alphabet + alphabet *2;
+                times = shift / (alphabet * 2);
+                shift = (shift  % (alphabet *2)) + (alphabet * 2);
+                
             }
 
             int res = c + shift;
@@ -142,8 +156,8 @@ namespace Ceasar_encryption
             else
                 res -= 'a';
 
-            int mod = res % (alphabet);
-            int times = res / (alphabet);
+            mod = res % (alphabet);
+            times += res / (alphabet);
 
             if ((times & 1) == 1)
             {
